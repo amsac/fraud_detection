@@ -18,6 +18,11 @@ except NameError:
 DATASET_DIR = BASE_DIR / "data"
 DATASET_DIR.mkdir(parents=True, exist_ok=True)
 
+def get_test_rows() -> pd.DataFrame:
+    """Load the test rows for unseen data testing."""
+    path = DATASET_DIR / "test_rows.csv"
+    return pd.read_csv(path)
+
 def pre_pipeline_preparation(*, data_frame: pd.DataFrame) -> pd.DataFrame:
     data_frame = data_frame.rename(columns={'oldbalanceOrg':'oldBalanceOrig', 'newbalanceOrig':'newBalanceOrig', \
                         'oldbalanceDest':'oldBalanceDest', 'newbalanceDest':'newBalanceDest'})
@@ -129,3 +134,6 @@ def save_for_testing_unseen_data(df: pd.DataFrame) -> pd.DataFrame:
     df = df.drop(index=test_rows.index)
     return df
     
+# /home/runner/work/fraud_transaction_detection/fraud_transaction_detection/fraud_transaction_detection/processing/data/test_rows.csv
+# /home/runner/work/fraud_transaction_detection/fraud_transaction_detection/fraud_transaction_detection/data/test_rows.csv'
+

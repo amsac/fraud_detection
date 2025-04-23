@@ -6,7 +6,7 @@ import pandas as pd
 from fraud_transaction_detection.pipeline import fraud_detection_pipeline
 from fraud_transaction_detection.config.core import  config
 from fraud_transaction_detection import __version__ as _version
-from fraud_transaction_detection.processing.data_manager import load_pipeline, pre_pipeline_preparation
+from fraud_transaction_detection.processing.data_manager import load_pipeline, pre_pipeline_preparation, get_test_rows
 from fraud_transaction_detection.processing.validation import validate_inputs
 try:
     BASE_DIR = Path(__file__).resolve().parent
@@ -33,7 +33,8 @@ def make_prediction(*, input_data: Union[pd.DataFrame, dict]) -> dict:
 
 if __name__ == "__main__":
     res = {0:"Normal", 1:"Fraud"}
-    test_df = pd.read_csv(Path(f"{DATASET_DIR}/test_rows.csv"))
+    # test_df = pd.read_csv(Path(f"{DATASET_DIR}/test_rows.csv"))
+    test_df = get_test_rows()
     test_df = pre_pipeline_preparation(data_frame=test_df)
     actual_values = test_df[config.model_config_.target].values
     feature_cols = config.model_config_.features
