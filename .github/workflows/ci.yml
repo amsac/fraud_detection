@@ -107,11 +107,11 @@ jobs:
         run: |
           aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com
 
-      - name: Build and push Docker images
+      - name: Build and push Docker images to ECR
         uses: docker/build-push-action@v4
         with:
           context: ./fraud_transaction_detection_api
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME_DJ }}/fraud-detection-model-repo:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/fraud-detection-model-repo:latest
             ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/fraud-detection-model-repo:latest
