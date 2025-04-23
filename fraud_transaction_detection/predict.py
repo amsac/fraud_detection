@@ -4,11 +4,13 @@ from typing import Union
 import numpy as np
 import pandas as pd
 from fraud_transaction_detection.pipeline import fraud_detection_pipeline
-from fraud_transaction_detection.config.core import DATASET_DIR, config
+from fraud_transaction_detection.config.core import  config
 from fraud_transaction_detection import __version__ as _version
 from fraud_transaction_detection.processing.data_manager import load_pipeline, pre_pipeline_preparation
 from fraud_transaction_detection.processing.validation import validate_inputs
 
+DATASET_DIR = BASE_DIR / "data"
+DATASET_DIR.mkdir(parents=True, exist_ok=True)
 
 pipeline_file_name = f"{config.app_config_.pipeline_save_file}{_version}.pkl"
 fraud_detection = load_pipeline(file_name = pipeline_file_name)
