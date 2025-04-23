@@ -119,6 +119,7 @@ def get_training_data() -> pd.DataFrame:
     return X_train, X_test, y_train, y_test
 
 def save_for_testing_unseen_data(df: pd.DataFrame) -> pd.DataFrame:
+    """Save a few rows for testing the model on unseen data."""
     test_rows_0 = df[df["isFraud"] == 0].sample(n=2, random_state=42)
     test_rows_1 = df[df["isFraud"] == 1].sample(n=2, random_state=42)
     test_rows = pd.concat([test_rows_0, test_rows_1])

@@ -25,7 +25,7 @@ model_config_:
   - nameDest
   - isFlaggedFraud
   best_hyperparameters:
-    n_estimators: 160
-    max_depth: 28
+    n_estimators: 59
+    max_depth: 27
     min_samples_leaf: 1
-    min_samples_split: 6
+    min_samples_split: 5
