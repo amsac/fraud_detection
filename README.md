@@ -1,114 +1,130 @@
-### 🛡️ Project Overview:  Fraud Detection System using AWS (ECR, ECS, Lambda) and DVC
+# 🚦 AI-Powered Fraud Detection System
 
-**Fraud Transaction Prediction** is a machine learning project aimed at identifying fraudulent bank transactions using various input features. The project uses a supervised learning approach with a **Random Forest Regression model**, which achieved an accuracy of **99%** on the labeled dataset.
-
-### 🧰 Tools & Technologies
-- **Amazon ECR & ECS**: Docker image is built for a FastAPI application and pushed to **Amazon ECR**. Deployment is handled through **Amazon ECS**.
-- **DVC (Data Version Control)**: Used for versioning datasets stored in **Google Cloud Storage**.
-- **Optuna**: Employed for hyperparameter tuning to identify the best model configuration.
-- **GitHub Actions**: CI/CD pipeline automates the workflow.
-
-### ⚙️ CI/CD Pipeline Workflow
-1. Pipeline is triggered in GitHub Actions.
-2. Data is pulled from **Google Cloud Storage** using DVC.
-3. **Optuna** performs hyperparameter tuning to find the best parameters.
-4. The model is trained using these optimal parameters.
-5. A **Docker image** is built for the FastAPI app and pushed to **Amazon ECR**.
-6. An **Amazon EventBridge** rule (previously CloudWatch Events) detects the new image push.
-7. This triggers an **AWS Lambda function**, which is configured with the ECS **cluster**, **service**, and **task definition** details.
-8. The Lambda function deploys the latest image to the ECS service automatically.
+This project implements a robust fraud detection system for banking transactions using machine learning. It leverages AWS services for deployment, Optuna for model optimization, and FastAPI for API services.
 
 ---
 
-## 🛠 Setup Instructions
-To get started, clone the repository and run the following command to set up the environment:
+## 🔧 Tech Stack
 
-```sh
+- **FastAPI** for API services
+- **Random Forest Regressor** for transaction classification
+- **Optuna** for hyperparameter tuning
+- **GitHub Actions** for CI/CD automation
+- **Docker, AWS ECR, ECS, Lambda, and EventBridge** for containerization and deployment
+
+---
+
+## 🔄 CI/CD Pipeline Overview
+
+1. GitHub Actions pipeline is triggered on code push.
+2. Model is trained using the latest dataset.
+3. Optuna performs model tuning.
+4. Trained model is saved locally.
+5. Docker image is built and pushed to Amazon ECR.
+6. AWS EventBridge detects new image and triggers a Lambda function.
+7. Lambda updates the ECS service with the new Docker image.
+
+---
+
+## 🛠️ Setup Instructions
+
+### 📁 Clone the Repo and Setup Environment
+
+```bash
 make setup
 ```
 
-This will:
-- Create a virtual environment (`venv`) if it doesn’t exist.
-- Install all required dependencies from `requirements/requirements.txt`.
-- Install test dependencies from `requirements/test_requirements.txt`.
-- Install the package in editable mode.
+- Initializes a virtual environment (`venv`)
+- Installs required and test dependencies
+- Installs the project in editable mode
 
-### 🏃 Activating Virtual Environment
-After setup, activate the virtual environment manually:
+### ▶️ Activate Virtual Environment
 
-```sh
-source venv/bin/activate  # On macOS/Linux
-venv\Scripts\activate     # On Windows
+```bash
+source venv/bin/activate       # macOS/Linux
+venv\Scripts\activate          # Windows
 ```
 
-## ✅ Running Tests
-To run tests, use:
+---
 
-```sh
+## 🧪 Running Tests
+
+```bash
 make test
 ```
 
-This will execute all tests using `pytest`.
+Runs test suite using `pytest`.
 
-## 🎯 Training the Model
-To train the model, run:
+---
 
-```sh
+## 🎓 Train the Model
+
+```bash
 make train
 ```
 
-This will execute the training pipeline and save the trained model under `fraud_transaction_detection/trained_models/`.
+Trains the model using the current best hyperparameters and stores it in `fraud_transaction_detection/trained_models/`.
 
-## 🏗️ **Building the Package**
-To build the package, use:
+---
 
-```sh
+## 📦 Build the Package
+
+```bash
 make build
 ```
 
-This command will:  
-- Build the Python package using `python -m build`  
-- Verify if the `.whl` file is generated and copy it to the `fraud_transaction_detection_api/` folder  
-
-Ensure you have Python and `pip` installed before running this command.  
+- Builds the Python wheel using `python -m build`
+- Copies the `.whl` to the FastAPI app directory
 
 ---
 
-## 🚀 **Running the Application**
-To start the fraud transaction detection API, run:
+## 🚀 Run the Application
 
-```sh
+```bash
 make run-app
 ```
 
-This command will:  
-- Start the application on http://0.0.0.0:8001/ 
+Runs the FastAPI server locally at:
 
-Ensure the virtual environment (`venv`) is set up before running this command.  
+```
+http://0.0.0.0:8001/
+```
 
 ---
 
-## 🐳 **Deploying with Docker**
-To build and run the application inside a Docker container, use:
+## 🐳 Docker Deployment
 
-```sh
+```bash
 make docker-deploy
 ```
 
-This command will:  
-- Check if Docker is running  
-- Build a Docker image using the `Dockerfile` inside `fraud_transaction_detection_api/`  
-- Run the container with the built image
-  
-Ensure the `.whl` file is generated and copy it to the `fraud_transaction_detection_api/` folder 
-Ensure Docker is installed and running before executing this command.  
+- Builds Docker image from API source
+- Runs the Docker container locally
+- Ensures the built `.whl` is available in the container context
 
 ---
 
+## ⚠️ Requirements
 
+- Python 3.x
+- Docker installed and running
+- Proper AWS credentials and GCP credential file setup for accessing datasets and deploying services
 
-## 💡 Additional Information
-- Ensure Python 3.x is installed before running `make setup`.
-- If you encounter any issues, try running commands inside the virtual environment manually.
+---
 
-🚀 Happy coding!
+## 📘 Notes
+
+- Always activate the virtual environment before running project scripts
+- Ensure AWS and Docker are correctly configured
+
+---
+
+## 🧠 Contributions
+
+Feel free to submit issues, pull requests, or feedback to improve the project.
+
+---
+
+## 📜 License
+
+MIT License
