@@ -8,6 +8,11 @@ from fraud_transaction_detection.config.core import  config
 from fraud_transaction_detection import __version__ as _version
 from fraud_transaction_detection.processing.data_manager import load_pipeline, pre_pipeline_preparation
 from fraud_transaction_detection.processing.validation import validate_inputs
+try:
+    BASE_DIR = Path(__file__).resolve().parent
+except NameError:
+    # If __file__ doesn't exist (e.g., in a notebook), fallback to cwd
+    BASE_DIR = Path.cwd()
 
 DATASET_DIR = BASE_DIR / "data"
 DATASET_DIR.mkdir(parents=True, exist_ok=True)
