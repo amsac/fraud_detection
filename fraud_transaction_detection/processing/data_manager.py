@@ -7,7 +7,7 @@ import kagglehub
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from fraud_transaction_detection import __version__ as _version  # noqa: F401
-from fraud_transaction_detection.config.core import DATASET_DIR, TRAINED_MODEL_DIR, config
+from fraud_transaction_detection.config.core import  TRAINED_MODEL_DIR, config
 try:
     BASE_DIR = Path(__file__).resolve().parent
 except NameError:
@@ -123,7 +123,9 @@ def save_for_testing_unseen_data(df: pd.DataFrame) -> pd.DataFrame:
     test_rows_0 = df[df["isFraud"] == 0].sample(n=2, random_state=42)
     test_rows_1 = df[df["isFraud"] == 1].sample(n=2, random_state=42)
     test_rows = pd.concat([test_rows_0, test_rows_1])
-    test_rows.to_csv(DATASET_DIR / "test_rows.csv", index=False)
+    path1 = DATASET_DIR / "test_rows.csv"
+    test_rows.to_csv(path1, index=False)
+    print("Saved test rows for unseen data testing. path is: ", path1)
     df = df.drop(index=test_rows.index)
     return df
     
