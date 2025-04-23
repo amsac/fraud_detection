@@ -125,7 +125,7 @@ def save_for_testing_unseen_data(df: pd.DataFrame) -> pd.DataFrame:
     test_rows = pd.concat([test_rows_0, test_rows_1])
     path1 = DATASET_DIR / "test_rows.csv"
     test_rows.to_csv(path1, index=False)
-    print("Saved test rows for unseen data testing. path is: ", path1)
+    print (f"Saved test rows for unseen data testing. path is: {path1}")
     df = df.drop(index=test_rows.index)
     return df
     
