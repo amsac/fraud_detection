@@ -1,0 +1,114 @@
+name: Fraud detection Workflow with Hyperparameter Optimization, Training, Packaging, and Containerization
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  model-training-stage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Fetch repository contents
+        uses: actions/checkout@v4
+
+      - name: Configure Python environment
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements/requirements.txt
+          pip install -r requirements/test_requirements.txt
+
+      - name: Execute hyperparameter optimization
+        run: python fraud_transaction_detection/tune_model.py
+
+      - name: Execute training pipeline
+        run: python fraud_transaction_detection/train_pipeline.py
+
+      - name: Run model prediction script
+        run: python fraud_transaction_detection/predict.py
+
+      - name: Archive trained model
+        uses: actions/upload-artifact@v4
+        with:
+          name: trained-model
+          path: fraud_transaction_detection/trained_models/
+
+  package-creation:
+    needs: model-training-stage
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+
+      - name: Retrieve model artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: trained-model
+          path: fraud_transaction_detection/trained_models/
+
+      - name: Install packaging tools
+        run: |
+          pip install --upgrade pip
+          pip install build wheel
+
+      - name: Package the Python project
+        run: python -m build
+
+      - name: Upload built wheel/tar files
+        uses: actions/upload-artifact@v4
+        with:
+          name: model-package
+          path: dist/
+
+  dockerize-and-push:
+    needs: package-creation
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Retrieve package for Docker build
+        uses: actions/download-artifact@v4
+        with:
+          name: model-package
+          path: fraud_transaction_detection_api/
+
+      - name: Initialize Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Authenticate with DockerHub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME_DJ }}
+          password: ${{ secrets.DOCKERHUB_TOKEN_DJ }}
+
+      - name: Set up AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
+
+      - name: Log in to AWS ECR
+        run: |
+          aws ecr get-login-password --region ap-south-1 | docker login --username AWS --password-stdin ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v4
+        with:
+          context: ./fraud_transaction_detection_api
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME_DJ }}/fraud-detection-model-repo:latest
+            ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.ap-south-1.amazonaws.com/fraud-detection-model-repo:latest

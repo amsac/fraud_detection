@@ -1,0 +1,16 @@
+include *.txt
+include *.md
+include *.pkl
+recursive-include ./fraud_transaction_detection *
+include fraud_transaction_detection/trained_models/*.pkl
+include fraud_transaction_detection/VERSION
+include fraud_transaction_detection/config.yml
+
+include ./requirements/requirements.txt
+include ./requirements/test_requirements.txt
+exclude *.log
+exclude *.cfg
+
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+

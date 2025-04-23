@@ -1,0 +1,7 @@
+[core]
+    remote = myremote
+    autostage = true
+['remote "gdrive_remote"']
+    url = gdrive://1h9bLmKbu_-Yr6h3y7b1HEN0dvYeDrmFJ
+['remote "myremote"']
+    url = gs://dvc_fraud_data_storage/dvcstore

@@ -1,0 +1,12 @@
+venv/
+.env/
+*.env
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+.DS_Store
+fraud_transaction_detection/trained_models/
+*/processing/data/*.csv
+*.csv

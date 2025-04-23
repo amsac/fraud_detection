@@ -1,0 +1,31 @@
+app_config_:
+  training_data_file: fraud_dataset.csv
+  pipeline_save_file: fraud_transaction_detection_model_output_v
+model_config_:
+  target: isFraud
+  features:
+  - step
+  - type
+  - amount
+  - oldBalanceOrig
+  - newBalanceOrig
+  - oldBalanceDest
+  - newBalanceDest
+  test_size: 0.3
+  random_state: 42
+  type_var: type
+  type_mapping:
+    CASH_IN: 1
+    CASH_OUT: 2
+    DEBIT: 3
+    PAYMENT: 4
+    TRANSFER: 5
+  unused_fields:
+  - nameOrig
+  - nameDest
+  - isFlaggedFraud
+  best_hyperparameters:
+    n_estimators: 160
+    max_depth: 28
+    min_samples_leaf: 1
+    min_samples_split: 6
